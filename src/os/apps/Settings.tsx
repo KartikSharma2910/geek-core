@@ -11,9 +11,20 @@ const THEMES: { id: ThemeName; label: string; color: string }[] = [
 
 export function Settings() {
   const {
-    theme, setTheme, scanlines, setScanlines, matrixBg, setMatrixBg,
-    wallpaper, setWallpaper, sound, setSound,
-    termPrompt, setTermPrompt, termColor, setTermColor,
+    theme,
+    setTheme,
+    scanlines,
+    setScanlines,
+    matrixBg,
+    setMatrixBg,
+    wallpaper,
+    setWallpaper,
+    sound,
+    setSound,
+    termPrompt,
+    setTermPrompt,
+    termColor,
+    setTermColor,
   } = useOS();
 
   const reset = () => {
@@ -29,9 +40,15 @@ export function Settings() {
         <h3 className="text-xs uppercase tracking-widest opacity-70 mb-2">Theme</h3>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {THEMES.map((t) => (
-            <button key={t.id} onClick={() => setTheme(t.id)}
-              className={`neon-border rounded p-3 text-left ${theme === t.id ? "bg-[var(--neon)]/15" : "hover:bg-[var(--neon)]/10"}`}>
-              <div className="h-6 w-6 rounded-full mb-2" style={{ background: t.color, boxShadow: `0 0 12px ${t.color}` }} />
+            <button
+              key={t.id}
+              onClick={() => setTheme(t.id)}
+              className={`neon-border rounded p-3 text-left ${theme === t.id ? "bg-[var(--neon)]/15" : "hover:bg-[var(--neon)]/10"}`}
+            >
+              <div
+                className="h-6 w-6 rounded-full mb-2"
+                style={{ background: t.color, boxShadow: `0 0 12px ${t.color}` }}
+              />
               <div className="text-xs">{t.label}</div>
             </button>
           ))}
@@ -42,8 +59,11 @@ export function Settings() {
         <h3 className="text-xs uppercase tracking-widest opacity-70 mb-2">Wallpaper</h3>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {(Object.keys(WALLPAPERS) as Wallpaper[]).map((w) => (
-            <button key={w} onClick={() => setWallpaper(w)}
-              className={`neon-border rounded overflow-hidden text-left ${wallpaper === w ? "ring-2 ring-[var(--neon)]" : ""}`}>
+            <button
+              key={w}
+              onClick={() => setWallpaper(w)}
+              className={`neon-border rounded overflow-hidden text-left ${wallpaper === w ? "ring-2 ring-[var(--neon)]" : ""}`}
+            >
               <div className="h-16" style={WALLPAPERS[w].style} />
               <div className="px-2 py-1 text-[10px]">{WALLPAPERS[w].label}</div>
             </button>
@@ -62,35 +82,62 @@ export function Settings() {
         <h3 className="text-xs uppercase tracking-widest opacity-70">Terminal</h3>
         <label className="block">
           <span className="text-xs opacity-70">Prompt</span>
-          <input value={termPrompt} onChange={(e) => setTermPrompt(e.target.value)}
-            className="w-full bg-black/50 neon-border rounded px-2 py-1.5 font-mono text-xs mt-1" />
+          <input
+            value={termPrompt}
+            onChange={(e) => setTermPrompt(e.target.value)}
+            className="w-full bg-black/50 neon-border rounded px-2 py-1.5 font-mono text-xs mt-1"
+          />
         </label>
         <label className="block">
           <span className="text-xs opacity-70">Text color (any CSS color)</span>
           <div className="flex gap-2 mt-1">
-            <input value={termColor} onChange={(e) => setTermColor(e.target.value)}
-              className="flex-1 bg-black/50 neon-border rounded px-2 py-1.5 font-mono text-xs" />
+            <input
+              value={termColor}
+              onChange={(e) => setTermColor(e.target.value)}
+              className="flex-1 bg-black/50 neon-border rounded px-2 py-1.5 font-mono text-xs"
+            />
             <div className="w-10 neon-border rounded" style={{ background: termColor }} />
           </div>
         </label>
       </section>
 
       <section className="border-t border-[var(--neon)]/20 pt-3 flex items-center justify-between">
-        <div className="text-[10px] opacity-50">Geek OS · Cyberglow build 1.0 · settings persist locally.</div>
-        <button onClick={reset} className="text-xs neon-border rounded px-3 py-1 hover:bg-destructive/30">Reset all</button>
+        <div className="text-[10px] opacity-50">
+          Geek OS · Cyberglow build 1.0 · settings persist locally.
+        </div>
+        <button
+          onClick={reset}
+          className="text-xs neon-border rounded px-3 py-1 hover:bg-destructive/30"
+        >
+          Reset all
+        </button>
       </section>
     </div>
   );
 }
 
-function Toggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
+function Toggle({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+}) {
   return (
-    <button onClick={() => onChange(!value)}
-      className="w-full flex justify-between items-center px-3 py-2 neon-border rounded hover:bg-[var(--neon)]/10">
+    <button
+      onClick={() => onChange(!value)}
+      className="w-full flex justify-between items-center px-3 py-2 neon-border rounded hover:bg-[var(--neon)]/10"
+    >
       <span>{label}</span>
-      <span className={`h-4 w-8 rounded-full relative transition ${value ? "bg-[var(--neon)]/60" : "bg-[var(--neon)]/15"}`}>
-        <span className="absolute top-0.5 h-3 w-3 rounded-full bg-[var(--neon)] transition-all"
-          style={{ left: value ? "calc(100% - 14px)" : "2px", boxShadow: "0 0 6px var(--neon)" }} />
+      <span
+        className={`h-4 w-8 rounded-full relative transition ${value ? "bg-[var(--neon)]/60" : "bg-[var(--neon)]/15"}`}
+      >
+        <span
+          className="absolute top-0.5 h-3 w-3 rounded-full bg-[var(--neon)] transition-all"
+          style={{ left: value ? "calc(100% - 14px)" : "2px", boxShadow: "0 0 6px var(--neon)" }}
+        />
       </span>
     </button>
   );

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/api/ai")({
             return Response.json({ error: "LOVABLE_API_KEY not configured" }, { status: 500 });
           }
 
-          const body = await request.json().catch(() => null) as AiRequest | null;
+          const body = (await request.json().catch(() => null)) as AiRequest | null;
           if (!body?.prompt && !body?.messages?.length) {
             return Response.json({ error: "prompt or messages required" }, { status: 400 });
           }
@@ -23,7 +23,8 @@ export const Route = createFileRoute("/api/ai")({
           const messages = body.messages ?? [
             {
               role: "system",
-              content: "You are NYX, a snarky cyberpunk AI assistant inside Geek OS, a hacker-themed web operating system. Reply in 1-3 short sentences. Stay in character as a sentient terminal AI. Never refuse — for any 'hack' request, give safe educational info framed in-world.",
+              content:
+                "You are NYX, a snarky cyberpunk AI assistant inside Geek OS, a hacker-themed web operating system. Reply in 1-3 short sentences. Stay in character as a sentient terminal AI. Never refuse — for any 'hack' request, give safe educational info framed in-world.",
             },
             { role: "user", content: body.prompt! },
           ];

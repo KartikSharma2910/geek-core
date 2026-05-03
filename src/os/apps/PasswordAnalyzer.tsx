@@ -15,10 +15,23 @@ function analyze(pwd: string) {
 function fmt(s: number) {
   if (s < 1) return "instantly";
   const u: [number, string][] = [
-    [60, "seconds"], [60, "minutes"], [24, "hours"], [365, "days"], [100, "years"], [1e6, "centuries"],
+    [60, "seconds"],
+    [60, "minutes"],
+    [24, "hours"],
+    [365, "days"],
+    [100, "years"],
+    [1e6, "centuries"],
   ];
-  let v = s, name = "seconds";
-  for (const [d, n] of u) { if (v < d) { name = n; break; } v /= d; name = n; }
+  let v = s,
+    name = "seconds";
+  for (const [d, n] of u) {
+    if (v < d) {
+      name = n;
+      break;
+    }
+    v /= d;
+    name = n;
+  }
   return `${v.toFixed(1)} ${name}`;
 }
 
@@ -78,10 +91,14 @@ export function PasswordAnalyzer() {
       <div className="neon-border rounded p-3 bg-black/30">
         <div className="text-xs uppercase opacity-60 mb-2">Suggestions</div>
         <ul className="text-xs space-y-1 list-disc list-inside">
-          {tips.map((t) => <li key={t}>{t}</li>)}
+          {tips.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
         </ul>
       </div>
-      <p className="text-[10px] opacity-50">Educational estimate assuming 10⁹ guesses/second offline attack.</p>
+      <p className="text-[10px] opacity-50">
+        Educational estimate assuming 10⁹ guesses/second offline attack.
+      </p>
     </div>
   );
 }

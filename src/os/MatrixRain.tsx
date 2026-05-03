@@ -21,7 +21,9 @@ export function MatrixRain() {
     resize();
     window.addEventListener("resize", resize);
 
-    const neon = getComputedStyle(document.documentElement).getPropertyValue("--neon").trim() || "oklch(0.88 0.22 150)";
+    const neon =
+      getComputedStyle(document.documentElement).getPropertyValue("--neon").trim() ||
+      "oklch(0.88 0.22 150)";
 
     const draw = () => {
       ctx.fillStyle = "rgba(8, 14, 10, 0.08)";

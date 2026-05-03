@@ -8,7 +8,9 @@ export function Window({ win, children }: { win: WindowState; children: ReactNod
   const dragRef = useRef<{ ox: number; oy: number; mx: number; my: number } | null>(null);
   const resizeRef = useRef<{ ow: number; oh: number; mx: number; my: number } | null>(null);
 
-  useEffect(() => { sfx.open(); }, []);
+  useEffect(() => {
+    sfx.open();
+  }, []);
   if (win.minimized) return null;
 
   const onDragStart = (e: React.MouseEvent) => {
@@ -37,7 +39,11 @@ export function Window({ win, children }: { win: WindowState; children: ReactNod
     const onMove = (ev: MouseEvent) => {
       if (!resizeRef.current) return;
       const r = resizeRef.current;
-      resize(win.id, Math.max(360, r.ow + ev.clientX - r.mx), Math.max(220, r.oh + ev.clientY - r.my));
+      resize(
+        win.id,
+        Math.max(360, r.ow + ev.clientX - r.mx),
+        Math.max(220, r.oh + ev.clientY - r.my),
+      );
     };
     const onUp = () => {
       resizeRef.current = null;
@@ -68,13 +74,25 @@ export function Window({ win, children }: { win: WindowState; children: ReactNod
           {win.title}
         </div>
         <div className="flex items-center gap-1">
-          <button onClick={() => toggleMin(win.id)} className="h-5 w-5 grid place-items-center hover:bg-[var(--neon)]/20 rounded">
+          <button
+            onClick={() => toggleMin(win.id)}
+            className="h-5 w-5 grid place-items-center hover:bg-[var(--neon)]/20 rounded"
+          >
             <Minus className="h-3 w-3" />
           </button>
-          <button onClick={() => toggleMax(win.id)} className="h-5 w-5 grid place-items-center hover:bg-[var(--neon)]/20 rounded">
+          <button
+            onClick={() => toggleMax(win.id)}
+            className="h-5 w-5 grid place-items-center hover:bg-[var(--neon)]/20 rounded"
+          >
             <Square className="h-3 w-3" />
           </button>
-          <button onClick={() => { sfx.close(); close(win.id); }} className="h-5 w-5 grid place-items-center hover:bg-destructive/40 rounded">
+          <button
+            onClick={() => {
+              sfx.close();
+              close(win.id);
+            }}
+            className="h-5 w-5 grid place-items-center hover:bg-destructive/40 rounded"
+          >
             <X className="h-3 w-3" />
           </button>
         </div>

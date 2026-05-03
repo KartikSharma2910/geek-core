@@ -51,8 +51,7 @@ export function BootScreen() {
         <div className="text-xs md:text-sm space-y-1 leading-relaxed">
           {shown.map((l, i) => (
             <div key={i} className="opacity-90">
-              <span className="opacity-60">{String(i + 1).padStart(2, "0")}</span>{" "}
-              <span>{l}</span>
+              <span className="opacity-60">{String(i + 1).padStart(2, "0")}</span> <span>{l}</span>
             </div>
           ))}
           <div className="cursor-blink inline-block w-2 h-4 bg-[var(--neon)] align-middle" />

@@ -2,14 +2,31 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 export type AppId =
-  | "terminal" | "monitor" | "password" | "network" | "api"
-  | "lab" | "learn" | "challenges" | "wifi" | "achievements"
-  | "vpn" | "settings" | "about";
+  | "terminal"
+  | "monitor"
+  | "password"
+  | "network"
+  | "api"
+  | "lab"
+  | "learn"
+  | "challenges"
+  | "wifi"
+  | "achievements"
+  | "vpn"
+  | "settings"
+  | "about";
 
 export interface WindowState {
-  id: string; appId: AppId; title: string;
-  x: number; y: number; w: number; h: number; z: number;
-  minimized: boolean; maximized: boolean;
+  id: string;
+  appId: AppId;
+  title: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  z: number;
+  minimized: boolean;
+  maximized: boolean;
 }
 
 export type ThemeName = "green" | "purple" | "red" | "amber" | "ice";
@@ -33,8 +50,10 @@ const APP_TITLES: Record<AppId, string> = {
 export const APP_TITLE = (a: AppId) => APP_TITLES[a];
 
 interface OSState {
-  booted: boolean; setBooted: (b: boolean) => void;
-  windows: WindowState[]; topZ: number;
+  booted: boolean;
+  setBooted: (b: boolean) => void;
+  windows: WindowState[];
+  topZ: number;
   open: (appId: AppId) => void;
   close: (id: string) => void;
   focus: (id: string) => void;
@@ -44,13 +63,20 @@ interface OSState {
   toggleMax: (id: string) => void;
 
   // persisted settings
-  theme: ThemeName; setTheme: (t: ThemeName) => void;
-  scanlines: boolean; setScanlines: (v: boolean) => void;
-  matrixBg: boolean; setMatrixBg: (v: boolean) => void;
-  wallpaper: Wallpaper; setWallpaper: (w: Wallpaper) => void;
-  sound: boolean; setSound: (v: boolean) => void;
-  termPrompt: string; setTermPrompt: (s: string) => void;
-  termColor: string; setTermColor: (s: string) => void;
+  theme: ThemeName;
+  setTheme: (t: ThemeName) => void;
+  scanlines: boolean;
+  setScanlines: (v: boolean) => void;
+  matrixBg: boolean;
+  setMatrixBg: (v: boolean) => void;
+  wallpaper: Wallpaper;
+  setWallpaper: (w: Wallpaper) => void;
+  sound: boolean;
+  setSound: (v: boolean) => void;
+  termPrompt: string;
+  setTermPrompt: (s: string) => void;
+  termColor: string;
+  setTermColor: (s: string) => void;
 
   // persisted progress
   iconPositions: Record<string, { x: number; y: number }>;
@@ -89,12 +115,15 @@ export const useOS = create<OSState>()(
           windows: [
             ...s.windows,
             {
-              id, appId, title: APP_TITLES[appId],
+              id,
+              appId,
+              title: APP_TITLES[appId],
               x: isMobile ? 8 : 80 + offset,
               y: isMobile ? 8 : 60 + offset,
               w: isMobile ? vw - 16 : 720,
               h: isMobile ? window.innerHeight - 80 : 460,
-              z, minimized: false,
+              z,
+              minimized: false,
               maximized: isMobile,
             },
           ],
@@ -111,9 +140,13 @@ export const useOS = create<OSState>()(
       resize: (id, w, h) =>
         set((s) => ({ windows: s.windows.map((win) => (win.id === id ? { ...win, w, h } : win)) })),
       toggleMin: (id) =>
-        set((s) => ({ windows: s.windows.map((w) => (w.id === id ? { ...w, minimized: !w.minimized } : w)) })),
+        set((s) => ({
+          windows: s.windows.map((w) => (w.id === id ? { ...w, minimized: !w.minimized } : w)),
+        })),
       toggleMax: (id) =>
-        set((s) => ({ windows: s.windows.map((w) => (w.id === id ? { ...w, maximized: !w.maximized } : w)) })),
+        set((s) => ({
+          windows: s.windows.map((w) => (w.id === id ? { ...w, maximized: !w.maximized } : w)),
+        })),
 
       theme: "green",
       setTheme: (t) => set({ theme: t }),
@@ -151,14 +184,23 @@ export const useOS = create<OSState>()(
     }),
     {
       name: "geekos-state",
-      storage: createJSONStorage(() => (typeof window !== "undefined" ? localStorage : (undefined as never))),
+      storage: createJSONStorage(() =>
+        typeof window !== "undefined" ? localStorage : (undefined as never),
+      ),
       partialize: (s) => ({
-        theme: s.theme, scanlines: s.scanlines, matrixBg: s.matrixBg,
-        wallpaper: s.wallpaper, sound: s.sound,
-        termPrompt: s.termPrompt, termColor: s.termColor,
-        iconPositions: s.iconPositions, achievements: s.achievements,
-        ctfSolved: s.ctfSolved, ctfScore: s.ctfScore, lessonsDone: s.lessonsDone,
+        theme: s.theme,
+        scanlines: s.scanlines,
+        matrixBg: s.matrixBg,
+        wallpaper: s.wallpaper,
+        sound: s.sound,
+        termPrompt: s.termPrompt,
+        termColor: s.termColor,
+        iconPositions: s.iconPositions,
+        achievements: s.achievements,
+        ctfSolved: s.ctfSolved,
+        ctfScore: s.ctfScore,
+        lessonsDone: s.lessonsDone,
       }),
-    }
-  )
+    },
+  ),
 );

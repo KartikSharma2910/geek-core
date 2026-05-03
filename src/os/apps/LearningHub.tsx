@@ -1,12 +1,36 @@
 import { useState } from "react";
 
 const LESSONS = [
-  { cat: "Networking", title: "OSI Model in 7 layers", body: "Physical, Data Link, Network, Transport, Session, Presentation, Application — the framework that defines how data travels." },
-  { cat: "Networking", title: "TCP vs UDP", body: "TCP guarantees delivery via handshakes & retransmission. UDP is fire-and-forget — fast but unreliable." },
-  { cat: "Linux", title: "Essential commands", body: "ls, cd, grep, awk, sed, find, chmod, chown, ps, top, kill — your daily toolkit." },
-  { cat: "Linux", title: "Permissions", body: "rwx for owner/group/others. Use chmod 755 for executables, 644 for files." },
-  { cat: "Security", title: "Defense in depth", body: "Layer firewalls, encryption, MFA, monitoring — assume any single layer can fail." },
-  { cat: "Security", title: "OWASP Top 10", body: "Injection, broken auth, XSS, IDOR, misconfigurations — the recurring suspects." },
+  {
+    cat: "Networking",
+    title: "OSI Model in 7 layers",
+    body: "Physical, Data Link, Network, Transport, Session, Presentation, Application — the framework that defines how data travels.",
+  },
+  {
+    cat: "Networking",
+    title: "TCP vs UDP",
+    body: "TCP guarantees delivery via handshakes & retransmission. UDP is fire-and-forget — fast but unreliable.",
+  },
+  {
+    cat: "Linux",
+    title: "Essential commands",
+    body: "ls, cd, grep, awk, sed, find, chmod, chown, ps, top, kill — your daily toolkit.",
+  },
+  {
+    cat: "Linux",
+    title: "Permissions",
+    body: "rwx for owner/group/others. Use chmod 755 for executables, 644 for files.",
+  },
+  {
+    cat: "Security",
+    title: "Defense in depth",
+    body: "Layer firewalls, encryption, MFA, monitoring — assume any single layer can fail.",
+  },
+  {
+    cat: "Security",
+    title: "OWASP Top 10",
+    body: "Injection, broken auth, XSS, IDOR, misconfigurations — the recurring suspects.",
+  },
 ];
 
 import { useOS } from "../store";
@@ -23,11 +47,19 @@ export function LearningHub() {
     <div className="grid grid-cols-[140px_1fr] h-full text-xs">
       <aside className="border-r border-[var(--neon)]/20 p-2 space-y-1 bg-black/30">
         {cats.map((c) => (
-          <button key={c} onClick={() => setCat(c)} className={`block w-full text-left px-2 py-1.5 rounded ${c === cat ? "bg-[var(--neon)]/20 neon-text" : "hover:bg-[var(--neon)]/10"}`}>{c}</button>
+          <button
+            key={c}
+            onClick={() => setCat(c)}
+            className={`block w-full text-left px-2 py-1.5 rounded ${c === cat ? "bg-[var(--neon)]/20 neon-text" : "hover:bg-[var(--neon)]/10"}`}
+          >
+            {c}
+          </button>
         ))}
         <div className="mt-4 px-2">
           <div className="text-[10px] opacity-60 mb-1">Progress {progress}%</div>
-          <div className="h-1.5 bg-[var(--neon)]/15 rounded"><div className="h-full bg-[var(--neon)] rounded" style={{ width: `${progress}%` }} /></div>
+          <div className="h-1.5 bg-[var(--neon)]/15 rounded">
+            <div className="h-full bg-[var(--neon)] rounded" style={{ width: `${progress}%` }} />
+          </div>
         </div>
       </aside>
       <main className="p-4 space-y-3 overflow-auto">

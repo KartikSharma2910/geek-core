@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useOS, type AppId } from "../store";
 import { sfx } from "../sound";
 
-interface Line { type: "in" | "out" | "ai" | "err"; text: string; }
+interface Line {
+  type: "in" | "out" | "ai" | "err";
+  text: string;
+}
 
 const HELP = `Available commands:
   help                show this help
@@ -35,7 +38,10 @@ async function askNYX(prompt: string) {
     body: JSON.stringify({ prompt }),
   });
 
-  const payload = await response.json().catch(() => null) as { content?: string; error?: string } | null;
+  const payload = (await response.json().catch(() => null)) as {
+    content?: string;
+    error?: string;
+  } | null;
   if (!response.ok || !payload?.content) {
     throw new Error(payload?.error ?? `AI endpoint failed (${response.status})`);
   }
@@ -57,8 +63,12 @@ export function Terminal() {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView(); }, [lines]);
-  useEffect(() => { inputRef.current?.focus(); }, []);
+  useEffect(() => {
+    endRef.current?.scrollIntoView();
+  }, [lines]);
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const print = (text: string, type: Line["type"] = "out") =>
     setLines((l) => [...l, { type, text }]);
@@ -71,34 +81,64 @@ export function Terminal() {
     if (!cmd) return;
     const [c, ...args] = cmd.split(/\s+/);
     switch (c) {
-      case "help": print(HELP); break;
-      case "clear": setLines([]); break;
-      case "echo": print(args.join(" ")); break;
-      case "whoami": print("operator"); break;
-      case "date": print(new Date().toString()); break;
-      case "ls": print(Object.keys(FAKE_FS).join("   ")); break;
+      case "help":
+        print(HELP);
+        break;
+      case "clear":
+        setLines([]);
+        break;
+      case "echo":
+        print(args.join(" "));
+        break;
+      case "whoami":
+        print("operator");
+        break;
+      case "date":
+        print(new Date().toString());
+        break;
+      case "ls":
+        print(Object.keys(FAKE_FS).join("   "));
+        break;
       case "cat": {
         const f = FAKE_FS[args[0]];
         print(f ?? `cat: ${args[0]}: no such file`, f ? "out" : "err");
         break;
       }
-      case "history": print(history.map((h, i) => `${i + 1}  ${h}`).join("\n")); break;
+      case "history":
+        print(history.map((h, i) => `${i + 1}  ${h}`).join("\n"));
+        break;
       case "prompt":
-        if (args.length) { setTermPrompt(args.join(" ")); print(`prompt updated.`); }
-        else print(`current: ${termPrompt}`);
+        if (args.length) {
+          setTermPrompt(args.join(" "));
+          print(`prompt updated.`);
+        } else print(`current: ${termPrompt}`);
         break;
       case "color":
-        if (args[0]) { setTermColor(args[0]); print(`color set to ${args[0]}`); }
-        else print(`current: ${termColor}`);
+        if (args[0]) {
+          setTermColor(args[0]);
+          print(`color set to ${args[0]}`);
+        } else print(`current: ${termColor}`);
         break;
       case "theme": {
-        const map: Record<string, "green"|"purple"|"red"|"amber"|"ice"> = { g: "green", p: "purple", r: "red", a: "amber", i: "ice" };
+        const map: Record<string, "green" | "purple" | "red" | "amber" | "ice"> = {
+          g: "green",
+          p: "purple",
+          r: "red",
+          a: "amber",
+          i: "ice",
+        };
         const t = map[args[0]?.[0] ?? ""];
-        if (t) { setTheme(t); print(`theme → ${t}`); } else print("usage: theme [g|p|r|a|i]");
+        if (t) {
+          setTheme(t);
+          print(`theme → ${t}`);
+        } else print("usage: theme [g|p|r|a|i]");
         break;
       }
       case "system-info": {
-        const nav = navigator as Navigator & { deviceMemory?: number; connection?: { effectiveType?: string; downlink?: number } };
+        const nav = navigator as Navigator & {
+          deviceMemory?: number;
+          connection?: { effectiveType?: string; downlink?: number };
+        };
         const cores = nav.hardwareConcurrency ?? "?";
         const mem = nav.deviceMemory ?? "?";
         const conn = nav.connection?.effectiveType ?? "unknown";
@@ -123,13 +163,32 @@ Geek OS     : 1.0 "Cyberglow"`);
         break;
       }
       case "open": {
-        const valid = ["terminal","monitor","password","network","api","lab","learn","challenges","wifi","achievements","settings","about"];
-        if (valid.includes(args[0])) { open(args[0] as AppId); print(`launching ${args[0]}...`); sfx.open(); }
-        else print(`unknown app: ${args[0] ?? "(none)"}`, "err");
+        const valid = [
+          "terminal",
+          "monitor",
+          "password",
+          "network",
+          "api",
+          "lab",
+          "learn",
+          "challenges",
+          "wifi",
+          "achievements",
+          "settings",
+          "about",
+        ];
+        if (valid.includes(args[0])) {
+          open(args[0] as AppId);
+          print(`launching ${args[0]}...`);
+          sfx.open();
+        } else print(`unknown app: ${args[0] ?? "(none)"}`, "err");
         break;
       }
       case "ai": {
-        if (!args.length) { print("usage: ai <prompt>", "err"); break; }
+        if (!args.length) {
+          print("usage: ai <prompt>", "err");
+          break;
+        }
         setBusy(true);
         print("NYX is thinking...", "ai");
         try {
@@ -137,32 +196,64 @@ Geek OS     : 1.0 "Cyberglow"`);
           setLines((l) => [...l.slice(0, -1), { type: "ai", text: `NYX » ${content}` }]);
           unlock("first-ai");
         } catch (e) {
-          setLines((l) => [...l.slice(0, -1), { type: "err", text: `NYX offline: ${(e as Error).message}` }]);
-        } finally { setBusy(false); }
+          setLines((l) => [
+            ...l.slice(0, -1),
+            { type: "err", text: `NYX offline: ${(e as Error).message}` },
+          ]);
+        } finally {
+          setBusy(false);
+        }
         break;
       }
-      default: print(`command not found: ${c}. try 'help'.`, "err");
+      default:
+        print(`command not found: ${c}. try 'help'.`, "err");
     }
   };
 
   const onKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     sfx.key();
-    if (e.key === "Enter") { exec(input); setInput(""); return; }
+    if (e.key === "Enter") {
+      exec(input);
+      setInput("");
+      return;
+    }
     if (e.key === "ArrowUp") {
       e.preventDefault();
       const ni = hIdx < 0 ? history.length - 1 : Math.max(0, hIdx - 1);
-      setHIdx(ni); setInput(history[ni] ?? "");
+      setHIdx(ni);
+      setInput(history[ni] ?? "");
     }
     if (e.key === "ArrowDown") {
       e.preventDefault();
       if (hIdx < 0) return;
       const ni = hIdx + 1;
-      if (ni >= history.length) { setHIdx(-1); setInput(""); }
-      else { setHIdx(ni); setInput(history[ni]); }
+      if (ni >= history.length) {
+        setHIdx(-1);
+        setInput("");
+      } else {
+        setHIdx(ni);
+        setInput(history[ni]);
+      }
     }
     if (e.key === "Tab") {
       e.preventDefault();
-      const cmds = ["help","clear","echo","whoami","date","ls","cat","history","prompt","color","theme","system-info","simulate-scan","open","ai"];
+      const cmds = [
+        "help",
+        "clear",
+        "echo",
+        "whoami",
+        "date",
+        "ls",
+        "cat",
+        "history",
+        "prompt",
+        "color",
+        "theme",
+        "system-info",
+        "simulate-scan",
+        "open",
+        "ai",
+      ];
       const m = cmds.find((x) => x.startsWith(input));
       if (m) setInput(m);
     }
@@ -177,7 +268,9 @@ Geek OS     : 1.0 "Cyberglow"`);
       {lines.map((l, i) => (
         <div key={i} className="whitespace-pre-wrap break-words">
           {l.type === "in" ? (
-            <><span className="opacity-60">{termPrompt}</span> {l.text}</>
+            <>
+              <span className="opacity-60">{termPrompt}</span> {l.text}
+            </>
           ) : l.type === "err" ? (
             <span className="text-red-400">{l.text}</span>
           ) : l.type === "ai" ? (
